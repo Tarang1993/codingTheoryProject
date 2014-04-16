@@ -1,4 +1,4 @@
-''' ****************************************
+''' ****************************************************************
 Author: Tarang Patel
 
 ID: 201101110
@@ -6,10 +6,12 @@ ID: 201101110
 Email: patel_tarang@daiict.ac.in
 
 Brief: This python script will take an file as input.
-	   The input file will contain the Genarator matrix 
+	   The input file ('input.txt') will contain the Genarator matrix 
 	   of binary linear code [n, k, d].
+
 	   Note that, the input generator matrix should start
 	   from the first line of the file.
+
 	   Also the format of the generator matrix should be as
 	   follows: 
 	   
@@ -20,14 +22,23 @@ Brief: This python script will take an file as input.
 
 	   The script will compute the Dual code of the given binary
 	   linear code and will store the list of the codewords in 
-	   a output file. It will also store the parameters of the code
+	   a output file (output.txt). It will also store the parameters of the code
 	   [n, k, d] in the file.
+
 	   The script will also output the list of the codewords and the 
 	   parameters of the code in the standard output.
+
+Input: 'input.txt' file that contains the generator matrix of the given
+		binary linear code in specified format.
+		You can edit the input file and provide valid generator matrix 
+		of the binary linear code.
+
+Ouput: 'output.txt' file that contains the parameters [n. k, d] of the dual
+		code and the list of all the codewords of the dual code.
+
 '''
 
-from math import *
-import math
+from math import pow
 
 # Global variables
 codes = []                  # Contains all the codewords of the given binary linear code
@@ -59,11 +70,10 @@ def generateInputCodes():
 	inputN = len(generator_codes[0])
 	
 	# Generate all the codewords of the input code.
-	totalCodes = int(math.pow(2, inputK))
+	totalCodes = int(pow(2, inputK))
 	for i in range(0, int(totalCodes)):
 		code = inputN*[0]
 		shift = 0
-		#print inputK
 		while( shift != inputK):
 			if( (i >> shift) & 1):
 				for j in range(0, inputN):
@@ -113,7 +123,7 @@ def writeOutputToFile():
 	for dualCode in dualCodes:
 		output_file.write("(")
 		for i in range(0, inputN - 1):
-			output_file.write(str(dualCode[i])+", ")
+			output_file.write(str(dualCode[i])+" ")
 		output_file.write(str(dualCode[inputN - 1])+")\n")
 
 def output():
@@ -122,8 +132,25 @@ def output():
 	for dualCode in dualCodes:
 		print "(",
 		for i in range(0, inputN - 1):
-			print str(dualCode[i])+",",
+			print str(dualCode[i])+"",
 
 		print str(dualCode[inputN - 1])+" )"
 
+def main():
+	# Generate all the input codewords
+	generateInputCodes()
 
+	# Compute all the codewords of the dual codes
+	computeDualCode()
+
+	# Compute minimum hamming distance (d) of the dual code.
+	computeMinumumHammingDistance()
+
+	# Write all the codewords of dual code and [n, k, d] to the output file.
+	writeOutputToFile()
+
+	# Print the output to the standard output.
+	output()
+
+if __name__ == '__main__':
+    main()
