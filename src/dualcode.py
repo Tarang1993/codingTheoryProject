@@ -36,7 +36,8 @@ inputK = 0					# 'k' value of input code.
 dualK = 0					# 'k' value of Dual code.
 inputN = 0					# Length of the codewords of input code.
 dualN = 0					# Length of the codewords of Dual code.
-dualD = 10000000		    # Minimum hamming distance of the Dual code.
+dualD = 10000000		    # Minimum hamming distance of the Dual code. Initialized to a high 
+							# value.
  
 # Generate all the codewords of the given code [n, k, d] and store in it codes matrix.
 def generateInputCodes():
@@ -72,7 +73,6 @@ def generateInputCodes():
 
 # Compute all the parameters and all the codewords of the dual code of [n, k, d] code.
 def computeDualCode():
-
 	global dualCodes
 	totalCodeSpace = int(pow(2, inputN))
 	for code in range(0, totalCodeSpace):
@@ -85,7 +85,6 @@ def computeDualCode():
 				shift -= 1
 			if sum != 0:
 				isOrthogonal = 0
-				print code,inputCode,sum
 				break
 
 		if isOrthogonal:
@@ -100,12 +99,31 @@ def computeMinumumHammingDistance():
 	global dualD
 	for selectedCode in dualCodes:
 		for otherCode in dualCodes:
-			hammingDistace = 0
+			hammingDistance = 0
 			if selectedCode != otherCode:
 				for i in range(0, inputN):
 					if selectedCode[i] != otherCode[i]:
-						hammingDistace += 1
+						hammingDistance += 1
+				dualD = min(dualD, hammingDistance)
 
-				dualD = min(dualD, hammingDistace)
+def writeOutputToFile():
+	output_file = open('output.txt', 'w')
+	output_file.write("Dual code of the given binary linear code has parameters [n, k, d] = ["+str(inputN) +", "+str(inputN - inputK)+", "+str(dualD)+"]\n\n")
+	output_file.write("All the codewords of the Dual code are as follows:\n\n")
+	for dualCode in dualCodes:
+		output_file.write("(")
+		for i in range(0, inputN - 1):
+			output_file.write(str(dualCode[i])+", ")
+		output_file.write(str(dualCode[inputN - 1])+")\n")
+
+def output():
+	print "Dual code of the given binary linear code has parameters [n, k, d] = ["+str(inputN) +", "+str(inputN - inputK)+", "+str(dualD)+"]\n"
+	print "All the codewords of the Dual code are as follows:\n"
+	for dualCode in dualCodes:
+		print "(",
+		for i in range(0, inputN - 1):
+			print str(dualCode[i])+",",
+
+		print str(dualCode[inputN - 1])+" )"
 
 
