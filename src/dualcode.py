@@ -1,14 +1,43 @@
+''' ****************************************
+Author: Tarang Patel
+
+ID: 201101110
+
+Email: patel_tarang@daiict.ac.in
+
+Brief: This python script will take an file as input.
+	   The input file will contain the Genarator matrix 
+	   of binary linear code [n, k, d].
+	   Note that, the input generator matrix should start
+	   from the first line of the file.
+	   Also the format of the generator matrix should be as
+	   follows: 
+	   
+	   For e.g,
+
+	   '0 0 0 0
+        1 1 1 1'
+
+	   The script will compute the Dual code of the given binary
+	   linear code and will store the list of the codewords in 
+	   a output file. It will also store the parameters of the code
+	   [n, k, d] in the file.
+	   The script will also output the list of the codewords and the 
+	   parameters of the code in the standard output.
+'''
+
 from math import *
 import math
 
-codes = []
-dualCodes = [] 
-inputK = 0.0
-dualK = 0
-inputN = 0
-dualN = 0
-dualD = 0
-
+# Global variables
+codes = []                  # Contains all the codewords of the given binary linear code
+dualCodes = []              # Contains all the codewords of the computed Dual code.
+inputK = 0					# 'k' value of input code.
+dualK = 0					# 'k' value of Dual code.
+inputN = 0					# Length of the codewords of input code.
+dualN = 0					# Length of the codewords of Dual code.
+dualD = 10000000		    # Minimum hamming distance of the Dual code.
+ 
 # Generate all the codewords of the given code [n, k, d] and store in it codes matrix.
 def generateInputCodes():
 
@@ -66,3 +95,17 @@ def computeDualCode():
 				generatedCode.append((code >> shift) & 1)
 				shift -= 1
 			dualCodes.append(generatedCode)
+
+def computeMinumumHammingDistance():
+	global dualD
+	for selectedCode in dualCodes:
+		for otherCode in dualCodes:
+			hammingDistace = 0
+			if selectedCode != otherCode:
+				for i in range(0, inputN):
+					if selectedCode[i] != otherCode[i]:
+						hammingDistace += 1
+
+				dualD = min(dualD, hammingDistace)
+
+
